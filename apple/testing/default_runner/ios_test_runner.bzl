@@ -23,9 +23,11 @@ def _get_template_substitutions(ctx):
     """Returns the template substitutions for this runner."""
     os_version = ctx.attr.os_version or ctx.fragments.objc.ios_simulator_version or ""
     device_type = ctx.attr.device_type or ctx.fragments.objc.ios_simulator_device or ""
+    use_existing_simulator = ctx.attr.use_existing_simulator
     subs = {
         "device_type": device_type,
         "os_version": str(os_version),
+        "use_existing_simulator": str(use_existing_simulator),
         "testrunner_binary": ctx.executable._testrunner.short_path,
     }
     return {"%(" + k + ")s": subs[k] for k in subs}
@@ -84,6 +86,12 @@ the runner. In most common cases, this should not be used.
 The os version of the iOS simulator to run test. The supported os versions
 correspond to the output of `xcrun simctl list runtimes`. ' 'E.g., 11.2, 9.3.
 By default, it is the latest supported version of the device type.'
+""",
+        ),
+        "use_existing_simulator": attr.bool(
+            default = False,
+            doc = """
+If using an existing simulator or creating a new one when using the runner'
 """,
         ),
         "_test_template": attr.label(

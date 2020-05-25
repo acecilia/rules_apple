@@ -102,9 +102,16 @@ if [[ -n "${LAUNCH_OPTIONS_JSON_STR}" ]]; then
   runner_flags+=("--launch_options_json_path=${LAUNCH_OPTIONS_JSON_PATH}")
 fi
 
+SUBCOMMAND=""
+if [ "%(use_existing_simulator)" = "True" ]; then
+  SUBCOMMAND="test"
+else
+  SUBCOMMAND="simulator_test"
+fi
+
 cmd=("%(testrunner_binary)s"
   "${runner_flags[@]}"
-  simulator_test
+  "$SUBCOMMAND"
   "--device_type=%(device_type)s"
   "--os_version=%(os_version)s"
   "$@")
